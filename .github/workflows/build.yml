@@ -43,6 +43,6 @@ jobs:
           git add minecraft-launcher.html
           git commit -m "自動生成: Minecraft launcher" || echo "No changes"
           git push
-
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
