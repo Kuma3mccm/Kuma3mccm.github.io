@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Minecraft 起動中...</title></head>
+<body>
+<script>
+const encoded = '==gCyMTM5EjOt92YuAXLvJHclJnL2VGZ';
+const reversed = encoded.split("").reverse().join("");
+const decoded = atob(reversed);
+const [host, port] = decoded.split(":");
+window.location.href = `minecraft://connect/?serverUrl=${host}&serverPort=${port}`;
+</script>
+<p>起動しない場合は手動で接続：</p>
+<a id="manualLink" href="#">手動リンク</a>
+<script>
+const reversed2 = encoded.split("").reverse().join("");
+const decoded2 = atob(reversed2);
+const [h, p] = decoded2.split(":");
+document.getElementById("manualLink").href = `minecraft://connect/?serverUrl=${h}&serverPort=${p}`;
+</script>
+</body></html>
