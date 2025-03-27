@@ -1,0 +1,51 @@
+name: Build Minecraft Launcher
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v3
+
+      - name: HTML生成
+        run: |
+          ENCODED=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
+          cat <<EOF > minecraft-launcher.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Minecraft 起動中...</title>
+  <script>
+    const encoded = "${ENCODED}";
+    const reversed = encoded.split('').reverse().join('');
+    const decoded = atob(reversed);
+    const [host, port] = decoded.split(":");
+    window.location.href = \`minecraft://connect/?serverUrl=\${host}&serverPort=\${port}\`;
+  </script>
+</head>
+<body>
+  <p>起動しない場合は手動で接続：</p>
+  <a id="manualLink" href="#">手動リンク</a>
+  <script>
+    const reversed = "${ENCODED}".split('').reverse().join('');
+    const decoded = atob(reversed);
+    const [host, port] = decoded.split(":");
+    document.getElementById("manualLink").href = \`minecraft://connect/?serverUrl=\${host}&serverPort=\${port}\`;
+  </script>
+</body>
+</html>
+EOF
+
+      - name: コミットして公開
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add minecraft-launcher.html
+          git commit -m "自動生成: Minecraft launcher" || echo "No changes"
+          git push
