@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # GitHub Pages に push するために必要
+      contents: write
 
     steps:
       - name: Checkout
@@ -17,34 +17,15 @@ jobs:
 
       - name: Build HTML
         run: |
-          # サーバー情報を難読化（Base64 → 逆順）
-          ENCODED=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
-          
+          x1=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
           mkdir -p output
           echo '<!DOCTYPE html>' > output/index.html
           echo '<html>' >> output/index.html
-          echo '<head><meta charset="UTF-8"><title>Minecraft 起動中...</title></head>' >> output/index.html
+          echo '<head><meta charset="UTF-8"><title>Launching...</title></head>' >> output/index.html
           echo '<body>' >> output/index.html
           echo '<script>' >> output/index.html
-          echo "const encoded = '${ENCODED}';" >> output/index.html
-          echo 'const reversed = encoded.split("").reverse().join("");' >> output/index.html
-          echo 'const decoded = atob(reversed);' >> output/index.html
-          echo 'const [host, port] = decoded.split(":");' >> output/index.html
-          echo 'window.location.href = `minecraft://connect/?serverUrl=${host}&serverPort=${port}`;' >> output/index.html
-          echo '</script>' >> output/index.html
-          echo '<p>起動しない場合は手動で接続：</p>' >> output/index.html
-          echo '<a id="manualLink" href="#">手動リンク</a>' >> output/index.html
-          echo '<script>' >> output/index.html
-          echo 'const reversed2 = encoded.split("").reverse().join("");' >> output/index.html
-          echo 'const decoded2 = atob(reversed2);' >> output/index.html
-          echo 'const [h, p] = decoded2.split(":");' >> output/index.html
-          echo 'document.getElementById("manualLink").href = `minecraft://connect/?serverUrl=${h}&serverPort=${p}`;' >> output/index.html
-          echo '</script>' >> output/index.html
-          echo '</body></html>' >> output/index.html
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output
-          publish_branch: gh-pages
+          echo "const x1 = '${x1}';" >> output/index.html
+          echo 'const r2 = x1.split("").reverse().join("");' >> output/index.html
+          echo 'const d3 = atob(r2);' >> output/index.html
+          echo 'const [h4, p4] = d3.split(":");' >> output/index.html
+          echo 'window.location.href = `minecraft://connect/?serverUrl=${h4}&
