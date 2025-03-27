@@ -15,32 +15,25 @@ jobs:
       - name: HTML生成
         run: |
           ENCODED=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
-          cat <<EOF > minecraft-launcher.html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Minecraft 起動中...</title>
-  <script>
-    const encoded = "${ENCODED}";
-    const reversed = encoded.split('').reverse().join('');
-    const decoded = atob(reversed);
-    const [host, port] = decoded.split(":");
-    window.location.href = \`minecraft://connect/?serverUrl=\${host}&serverPort=\${port}\`;
-  </script>
-</head>
-<body>
-  <p>起動しない場合は手動で接続：</p>
-  <a id="manualLink" href="#">手動リンク</a>
-  <script>
-    const reversed = "${ENCODED}".split('').reverse().join('');
-    const decoded = atob(reversed);
-    const [host, port] = decoded.split(":");
-    document.getElementById("manualLink").href = \`minecraft://connect/?serverUrl=\${host}&serverPort=\${port}\`;
-  </script>
-</body>
-</html>
-EOF
+          echo '<!DOCTYPE html>' > minecraft-launcher.html
+          echo '<html>' >> minecraft-launcher.html
+          echo '<head><meta charset="UTF-8"><title>Minecraft 起動中...</title></head>' >> minecraft-launcher.html
+          echo '<body>' >> minecraft-launcher.html
+          echo '<script>' >> minecraft-launcher.html
+          echo 'const encoded = "'"$ENCODED"'";' >> minecraft-launcher.html
+          echo 'const reversed = encoded.split("").reverse().join("");' >> minecraft-launcher.html
+          echo 'const decoded = atob(reversed);' >> minecraft-launcher.html
+          echo 'const [host, port] = decoded.split(":");' >> minecraft-launcher.html
+          echo 'window.location.href = `minecraft://connect/?serverUrl=${host}&serverPort=${port}`;' >> minecraft-launcher.html
+          echo '</script>' >> minecraft-launcher.html
+          echo '<p>起動しない場合は手動で接続：</p>' >> minecraft-launcher.html
+          echo '<a id="manualLink" href="#">手動リンク</a>' >> minecraft-launcher.html
+          echo '<script>' >> minecraft-launcher.html
+          echo 'const decoded2 = atob(encoded.split("").reverse().join(""));' >> minecraft-launcher.html
+          echo 'const [h, p] = decoded2.split(":");' >> minecraft-launcher.html
+          echo 'document.getElementById("manualLink").href = `minecraft://connect/?serverUrl=${h}&serverPort=${p}`;' >> minecraft-launcher.html
+          echo '</script>' >> minecraft-launcher.html
+          echo '</body></html>' >> minecraft-launcher.html
 
       - name: コミットして公開
         run: |
