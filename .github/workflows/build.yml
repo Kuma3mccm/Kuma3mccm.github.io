@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # gh-pages への Push に必要！
+      contents: write  # GitHub Pages に push するために必要
 
     steps:
       - name: Checkout
@@ -17,7 +17,9 @@ jobs:
 
       - name: Build HTML
         run: |
+          # サーバー情報を難読化（Base64 → 逆順）
           ENCODED=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
+          
           mkdir -p output
           echo '<!DOCTYPE html>' > output/index.html
           echo '<html>' >> output/index.html
