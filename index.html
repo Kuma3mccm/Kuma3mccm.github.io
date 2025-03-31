@@ -8,13 +8,16 @@ const r2 = x1.split("").reverse().join("");
 const d3 = atob(r2);
 const [h4, p4] = d3.split(":");
 window.location.href = `minecraft://connect/?serverUrl=${h4}&serverPort=${p4}`;
+setTimeout(() => {
+  window.close();
+}, 3000);
 </script>
-<p>If you are not redirected, click below:</p>
-<a id="m1" href="#">Manual Connect</a>
+<p>If Minecraft did not open, <a id="m1" href="#">click here</a>.</p>
 <script>
 const r3 = x1.split("").reverse().join("");
 const d4 = atob(r3);
 const [h5, p5] = d4.split(":");
 document.getElementById("m1").href = `minecraft://connect/?serverUrl=${h5}&serverPort=${p5}`;
 </script>
+<noscript>Please close this page manually.</noscript>
 </body></html>
