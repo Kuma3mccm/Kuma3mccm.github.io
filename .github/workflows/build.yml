@@ -17,23 +17,27 @@ jobs:
 
       - name: Build HTML
         run: |
-          ENC=$(echo "${{ secrets.MC_SERVER }}:${{ secrets.MC_PORT }}" | base64 | rev)
+         echo '<!DOCTYPE html>' > output/index.html
+         echo '<html>' >> output/index.html
+         echo '<head><meta charset="UTF-8"><title>Launching...</title></head>' >> output/index.html
+         echo '<body>' >> output/index.html
+         echo '<script>' >> output/index.html
+         echo "const x1 = '${x1}';" >> output/index.html
+         echo 'const r2 = x1.split("").reverse().join("");' >> output/index.html
+         echo 'const d3 = atob(r2);' >> output/index.html
+         echo 'const [h4, p4] = d3.split(":");' >> output/index.html
+         echo 'window.location.href = `minecraft://connect/?serverUrl=${h4}&serverPort=${p4}`;' >> output/index.html
+         echo 'setTimeout(() => {' >> output/index.html
+         echo '  window.close();' >> output/index.html
+         echo '}, 3000);' >> output/index.html
+         echo '</script>' >> output/index.html
+         echo '<p>If Minecraft did not open, <a id="m1" href="#">click here</a>.</p>' >> output/index.html
+         echo '<script>' >> output/index.html
+         echo 'const r3 = x1.split("").reverse().join("");' >> output/index.html
+         echo 'const d4 = atob(r3);' >> output/index.html
+         echo 'const [h5, p5] = d4.split(":");' >> output/index.html
+         echo 'document.getElementById("m1").href = `minecraft://connect/?serverUrl=${h5}&serverPort=${p5}`;' >> output/index.html
+         echo '</script>' >> output/index.html
+         echo '<noscript>このページを閉じてください。</noscript>' >> output/index.html
+         echo '</body></html>' >> output/index.html
 
-          mkdir -p output
-
-          # JavaScript本体（自動起動用）
-          AUTO_JS="var a='${ENC}';var b=a.split('').reverse().join('');var c=function(d){return atob(d)};var e=c(b);var f=e.split(':');var g='minecraft://connect/?serverUrl='+f[0]+'&serverPort='+f[1];location.href=g;"
-
-          # JavaScript本体（手動リンク用）
-          LINK_JS="var h='${ENC}';var i=h.split('').reverse().join('');var j=function(k){return atob(k)};var l=j(i);var m=l.split(':');document.getElementById('xyz').href='minecraft://connect/?serverUrl='+m[0]+'&serverPort='+m[1];"
-
-          # base64化
-          AUTO_ENC=$(echo "${AUTO_JS}" | base64 -w 0)
-          LINK_ENC=$(echo "${LINK_JS}" | base64 -w 0)
-
-          echo -n '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Redirecting...</title></head><body>' > output/index.html
-          echo "<script>eval(atob('${AUTO_ENC}'))</script>" >> output/index.html
-          echo "<noscript><p>JavaScriptを有効にしてください</p></noscript>" >> output/index.html
-          echo "<a id='xyz' href='#'>手動接続</a>" >> output/index.html
-          echo "<script>eval(atob('${LINK_ENC}'))</script>" >> output/index.html
-          echo "</body></html>" >> output/index.html
