@@ -1,20 +1,86 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>Bedrock サーバーマップ一覧</title>
+  <meta charset="UTF-8" />
+  <title>Bedrock マップ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Leaflet CSS（uNmINeD標準）-->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-4oz3HkT+5leWffA24Oyxilbl1Q32lrX4TeF+T8sekWg="
+    crossorigin=""
+  />
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    ul { list-style: none; padding: 0; }
-    li { margin: .5rem 0; }
+    html, body { height: 100%; margin: 0; }
+    #map { width: 100%; height: 100%; }
+
+    /* ← ここから切り替えUI用スタイル */
+    #server-switch {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 6px 8px;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      font-size: 14px;
+    }
+    #server-switch select,
+    #server-switch button {
+      font-size: 14px;
+      margin-right: 4px;
+    }
+    /* ← ここまで */
   </style>
 </head>
 <body>
-  <h1>サーバーマップ一覧</h1>
-  <ul>
-    <li><a href="./Main/index.html">▶ Mainマップ</a></li>
-    <li><a href="./Sub1/index.html">▶ Sub1マップ</a></li>
-    <li><a href="./Sub2/index.html">▶ Sub2マップ</a></li>
-  </ul>
+
+  <!-- サーバー切り替えUI -->
+  <div id="server-switch">
+    <select id="serverSelect">
+      <option value="Mian">Main</option>
+      <option value="Sub1">Sub1</option>
+      <option value="Sub2">Sub1</option>
+      <!-- 追加したいサーバーがあればここに<option>を増やす -->
+    </select>
+    <button id="switchBtn">表示切替</button>
+  </div>
+
+  <!-- ここからがuNmINeD標準のマップ領域 -->
+  <div id="map"></div>
+
+  <!-- Leaflet + uNmINeD の JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-GZC0j2Ve6sybZBcjMWoyhi5U1GmZMFjKgVDMqYQmYtw="
+    crossorigin=""
+  ></script>
+  <script>
+    // --- サーバー切り替え処理 ---
+    document.getElementById('switchBtn').addEventListener('click', () => {
+      const sel = document.getElementById('serverSelect').value;
+      // 「docs/ServerA/index.html」 等を想定
+      window.location.href = `./${sel}/index.html`;
+    });
+
+    // --- 以下、uNmINeD-CLI が生成する部分と同じ ---
+    // タイルのパスやズーム範囲はお好みで調整してください
+    const map = L.map('map', {
+      crs: L.CRS.Simple,
+      minZoom: 0,
+      maxZoom: 8,
+      zoomControl: true
+    }).setView([0, 0], 0);
+
+    L.tileLayer('./tiles/{z}/{x}/{y}.png', {
+      tileSize: 256,
+      noWrap: true,
+      bounds: [[0,0], [256,256]]
+    }).addTo(map);
+
+    // （※ もし uNmINeD が別途スケール計算やイベント設定をしている場合は、そのスクリプトをここに貼り足してください）
+  </script>
 </body>
 </html>
