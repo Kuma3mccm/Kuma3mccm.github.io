@@ -7,7 +7,7 @@ var UnminedMapProperties = {
     minRegionX: -2,
     minRegionZ: -1,
     maxRegionX: 5,
-    maxRegionZ: 5,
+    maxRegionZ: 4,
     worldName: "ReproductionPROJECT Server",
     background: "",
     markers: new Array(),
